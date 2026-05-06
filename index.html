@@ -1,0 +1,174 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif}
+.wrap{padding:1.5rem 0;max-width:640px}
+.deco{text-align:center;font-size:16px;color:#C9A96E;letter-spacing:10px;margin-bottom:0.5rem}
+.title-bar{text-align:center;margin-bottom:1.8rem}
+.title-bar::before,.title-bar::after{content:'';display:block;width:50px;height:2px;background:#8B1A1A;margin:0 auto}
+.title-bar::before{margin-bottom:0.8rem}
+.title-bar::after{margin-top:0.8rem}
+.title-bar h1{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;color:var(--color-text-primary);line-height:1.6}
+.pool-label{font-size:11px;color:var(--color-text-tertiary);letter-spacing:0.06em;margin-bottom:8px}
+.pool{display:flex;flex-wrap:wrap;gap:8px;padding:14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);min-height:52px;margin-bottom:1.6rem}
+.kcard{padding:6px 16px;font-size:13px;font-family:'Noto Serif KR',serif;border:0.5px solid #8B1A1A55;border-radius:20px;background:var(--color-background-primary);color:#8B1A1A;cursor:grab;user-select:none;white-space:nowrap;transition:background 0.12s,color 0.12s}
+.kcard:hover{background:#8B1A1A;color:#fff;border-color:#8B1A1A}
+.kcard.used{opacity:0.3;pointer-events:none}
+.sentences{display:flex;flex-direction:column;gap:14px;margin-bottom:1.6rem}
+.sent-row{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px}
+.sent-label{font-size:12px;font-weight:500;color:#8B1A1A;margin-bottom:10px;font-family:'Noto Serif KR',serif}
+.sent-text{font-size:14px;color:var(--color-text-primary);line-height:2.4;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.blank{display:inline-flex;align-items:center;justify-content:center;min-width:110px;height:32px;border-bottom:2px solid #8B1A1A;padding:0 8px;font-size:13px;color:#8B1A1A;font-family:'Noto Serif KR',serif;background:transparent;vertical-align:middle;cursor:pointer;transition:background 0.12s;white-space:nowrap}
+.blank.over{background:#8B1A1A11}
+.blank .hint{font-size:11px;color:var(--color-text-tertiary);font-style:italic}
+.blank .placed-text{font-size:13px;color:#8B1A1A;font-family:'Noto Serif KR',serif}
+.btn-row{display:flex;gap:8px;justify-content:center}
+.btn{padding:8px 22px;font-size:13px;font-family:'Noto Sans KR',sans-serif;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer;transition:background 0.12s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-check{background:#8B1A1A;color:#fff;border-color:#8B1A1A}
+.btn-check:hover{background:#6B1212}
+.result{text-align:center;font-size:13px;padding:10px 16px;border-radius:var(--border-radius-md);margin-top:1rem;display:none}
+.result.show{display:block}
+.result.good{background:#EAF3DE;color:#3B6D11}
+.result.bad{background:#FCEBEB;color:#A32D2D}
+</style>
+
+<div class="wrap">
+  <div class="deco">◆ ◇ ◆</div>
+  <div class="title-bar">
+    <h1>키워드를 끌어다 놓아 문장을 완성해 보세요</h1>
+  </div>
+
+  <div class="pool-label">키워드 카드</div>
+  <div class="pool" id="pool"
+    ondragover="ev(event)" ondragleave="el(event)" ondrop="dropPool(event)">
+    <span class="kcard" draggable="true" data-key="몸짓과 표정" data-ans="jak1" ondragstart="ds(event)">몸짓과 표정</span>
+    <span class="kcard" draggable="true" data-key="감정·상황" data-ans="jak2" ondragstart="ds(event)">감정·상황</span>
+    <span class="kcard" draggable="true" data-key="무술 동작" data-ans="ta1" ondragstart="ds(event)">무술 동작</span>
+    <span class="kcard" draggable="true" data-key="격렬한 전투" data-ans="ta2" ondragstart="ds(event)">격렬한 전투</span>
+    <span class="kcard" draggable="true" data-key="화려한 의상" data-ans="none" ondragstart="ds(event)">화려한 의상</span>
+    <span class="kcard" draggable="true" data-key="즉흥적인 대사" data-ans="none" ondragstart="ds(event)">즉흥적인 대사</span>
+  </div>
+
+  <div class="sentences">
+    <div class="sent-row">
+      <div class="sent-label">작(作)</div>
+      <div class="sent-text">
+        <span class="blank" id="jak1" data-id="jak1" ondragover="ev(event)" ondragleave="el(event)" ondrop="drop(event)"><span class="hint">여기에 놓으세요</span></span>
+        <span>으로</span>
+        <span class="blank" id="jak2" data-id="jak2" ondragover="ev(event)" ondragleave="el(event)" ondrop="drop(event)"><span class="hint">여기에 놓으세요</span></span>
+        <span>을(를) 표현하는 연기</span>
+      </div>
+    </div>
+    <div class="sent-row">
+      <div class="sent-label">타(打)</div>
+      <div class="sent-text">
+        <span class="blank" id="ta1" data-id="ta1" ondragover="ev(event)" ondragleave="el(event)" ondrop="drop(event)"><span class="hint">여기에 놓으세요</span></span>
+        <span>으로</span>
+        <span class="blank" id="ta2" data-id="ta2" ondragover="ev(event)" ondragleave="el(event)" ondrop="drop(event)"><span class="hint">여기에 놓으세요</span></span>
+        <span>을(를) 표현하는 연기</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-check" onclick="check()">정답 확인</button>
+    <button class="btn" onclick="reset()">다시 하기</button>
+  </div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+var dk = null;
+var placed = {};
+
+function ds(e) {
+  dk = e.target.dataset.key;
+  e.dataTransfer.effectAllowed = 'move';
+}
+function ev(e) { e.preventDefault(); e.currentTarget.classList.add('over'); }
+function el(e) { e.currentTarget.classList.remove('over'); }
+
+function drop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('over');
+  if (!dk) return;
+  var card = document.querySelector('.kcard[data-key="' + dk + '"]');
+  if (!card) return;
+  var zone = e.currentTarget;
+  var zid = zone.dataset.id;
+  var prevKey = placed[zid];
+  if (prevKey) {
+    var prevCard = document.querySelector('.kcard[data-key="' + prevKey + '"]');
+    if (prevCard) prevCard.classList.remove('used');
+    delete placed[zid];
+  }
+  zone.innerHTML = '<span class="placed-text">' + dk + '</span>';
+  zone.style.color = '#8B1A1A';
+  placed[zid] = dk;
+  card.classList.add('used');
+  dk = null;
+}
+
+function dropPool(e) {
+  e.preventDefault();
+  document.getElementById('pool').classList.remove('over');
+  if (!dk) return;
+  var card = document.querySelector('.kcard[data-key="' + dk + '"]');
+  if (!card) return;
+  card.classList.remove('used');
+  Object.keys(placed).forEach(function(zid) {
+    if (placed[zid] === dk) {
+      var zone = document.getElementById(zid);
+      zone.innerHTML = '<span class="hint">여기에 놓으세요</span>';
+      zone.style.color = '';
+      zone.style.borderColor = '';
+      delete placed[zid];
+    }
+  });
+  dk = null;
+}
+
+function check() {
+  var correct = 0, filled = 0;
+  Object.keys(placed).forEach(function(zid) {
+    var zone = document.getElementById(zid);
+    var txt = zone.querySelector('.placed-text');
+    if (!txt) return;
+    filled++;
+    var card = document.querySelector('.kcard[data-key="' + placed[zid] + '"]');
+    var isCorrect = card && card.dataset.ans === zid;
+    if (isCorrect) {
+      zone.style.borderColor = '#3B6D11';
+      txt.style.color = '#3B6D11';
+      correct++;
+    } else {
+      zone.style.borderColor = '#A32D2D';
+      txt.style.color = '#A32D2D';
+    }
+  });
+  var msg = document.getElementById('result');
+  if (filled === 0) { msg.className = 'result show bad'; msg.textContent = '카드를 먼저 배치해주세요!'; return; }
+  if (correct === 4 && filled === 4) {
+    msg.className = 'result show good';
+    msg.textContent = '완벽해요! 작(作)은 몸짓과 표정으로 감정·상황을, 타(打)는 무술 동작으로 격렬한 전투를 표현하는 연기예요.';
+  } else {
+    msg.className = 'result show bad';
+    msg.textContent = correct + '/4개 맞았어요. 빨간 칸을 다시 확인해보세요.';
+  }
+}
+
+function reset() {
+  document.querySelectorAll('.blank').forEach(function(z) {
+    z.innerHTML = '<span class="hint">여기에 놓으세요</span>';
+    z.style.borderColor = '';
+    z.style.color = '';
+  });
+  document.querySelectorAll('.kcard').forEach(function(c) { c.classList.remove('used'); });
+  placed = {};
+  var msg = document.getElementById('result');
+  msg.className = 'result'; msg.textContent = '';
+  dk = null;
+}
+</script>
